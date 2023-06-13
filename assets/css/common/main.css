@@ -5,7 +5,11 @@
     margin: auto;
     padding: var(--gap);
 }
-
+.grid-container {
+    display:grid;
+    grid-template-columns: auto;
+    grid-gap: 10px;
+}
 .page-header h1 {
     font-size: 40px;
 }
