@@ -16,7 +16,7 @@
     {{- partialCached "header.html" . .Page -}}
     <div class="grid-container">
         {{ partial "sidebar.html" . }}
-        <main class="main" style="grid-row: 1; grid-column: 2;">
+        <main class="main" style="grid-row:1;grid-column:2;width: 100%">
             {{- block "main" . }}{{ end }}
         </main>
     </div>

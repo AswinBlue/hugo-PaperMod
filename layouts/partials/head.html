@@ -80,7 +80,7 @@
 {{- $fusejs := resources.Get "js/fuse.basic.min.js" }}
 {{- $license_js := resources.Get "js/license.js" }}
 {{- if not site.Params.assets.disableFingerprinting }}
-{{- $search := (slice $fusejs $license_js $fastsearch ) | resources.Concat "assets/js/search.js" | fingerprint }}
+{{- $search := (slice $fusejs $license_js $fastsearch ) | resources.Concat "assets/js/search.js" | minify | fingerprint }}
 <script defer crossorigin="anonymous" src="{{ $search.RelPermalink }}" integrity="{{ $search.Data.Integrity }}"></script>
 {{- else }}
 {{- $search := (slice $fusejs $fastsearch ) | resources.Concat "assets/js/search.js" }}
@@ -92,7 +92,7 @@
 {{- $isHLJSdisabled := (site.Params.assets.disableHLJS | default .Params.disableHLJS ) }}
 {{- if (and (eq .Kind "page") (ne .Layout "archives") (ne .Layout "search") (not $isHLJSdisabled)) }}
 {{- if not site.Params.assets.disableFingerprinting }}
-{{- $highlight := slice (resources.Get "js/highlight.min.js") | resources.Concat "assets/js/highlight.js" | fingerprint }}
+{{- $highlight := slice (resources.Get "js/highlight.min.js") | resources.Concat "assets/js/highlight.js" | minify | fingerprint }}
 <script defer crossorigin="anonymous" src="{{ $highlight.RelPermalink }}" integrity="{{ $highlight.Data.Integrity }}"
     onload="hljs.initHighlightingOnLoad();"></script>
 {{- else }}

@@ -1,3 +1,10 @@
-<div  style="float:left; margin:30px">
+<style>
+    @media (max-width: 640px) {
+        .auto-hide-div {
+            display: none;
+        }
+    }
+</style>
+<div  style="float:left; margin:30px" class="auto-hide-div">
     {{- partial "adfit.html" . -}}
 </div>
