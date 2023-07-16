@@ -1,10 +1,48 @@
-<style>
-    @media (max-width: 640px) {
-        .auto-hide-div {
-            display: none;
-        }
-    }
-</style>
-<div  style="float:left; margin:30px" class="auto-hide-div">
-    {{- partial "adfit.html" . -}}
+{{- define "directoryList" -}}
+  {{/*  {{ printf "%v %v" .Sections .Ancestors}}  */}}
+{{/* 1. print current section title (skip the root section) */}}
+  {{ if not (eq .Current .Current.FirstSection) }}
+  <li style="list-style-position: inside; text-indent: {{.Indent}}px; color:{{.Color}}">
+    <a href="{{ .Current.RelPermalink }}">{{ .Current.Title }}</a>
+  {{ end }}
+    {{ $target := .Target }}
+    {{ $site := .Site }}
+    {{ $color := .Color }}
+    {{ $indent := add (int .Indent) 10 }}
+    {{/* 2. print all the child sections */}}
+    {{- range $section := .Sections -}}
+      {{/* 2-1. color if the subSection is Ancestor of current page  */}}
+      {{ if or (eq $section.Permalink $target.Permalink) ($section.IsAncestor $target) }}
+        {{$color = "#1284FF"}}
+      {{ else }}
+        {{$color = "#FFFFFF"}}
+      {{ end }}
+
+      {{/* 2-2. print the subsection children  */}}
+      {{- template "directoryList" (dict "Site" $site "Sections" $section.Sections "Current" . "Target" $target "Color" $color "Indent" $indent) -}}
+    {{ end }}
+
+    {{/* 3. print child pages if section is ancestor of current page  */}}
+    <ul>
+      {{- range $page := .Current.RegularPages -}}
+        {{/*  check $page is the ancestor of the $target */}}
+        {{ if eq $target $page}}
+          {{/* 3-1. color if the "page" is currentPage */}}
+          <li style="list-style-position: inside; text-indent: {{ $indent }}px;color:{{ $color }}; content:\25ba\00a0"><a href="{{ $page.RelPermalink }}">{{ printf "%v" $page.Title }}</a></li>
+        {{ else }}
+          <li style="list-style-position: inside; text-indent: {{ $indent }}px;color:#FFFFFF"><a href="{{ $page.RelPermalink }}">{{ printf "%v" $page.Title }}</a></li>
+        {{ end }}
+    {{- end -}}
+    </ul>
+        
+    {{/*  to skip root section  */}}
+  {{ if not (eq .Current .Current.FirstSection) }}
+  </li>
+  {{ end }}
+{{- end -}}
+
+<div  style="float:left; margin:30px" class="auto-hide-div"> 
+  <ul>
+    {{- template "directoryList" (dict "Site" .Site "Sections" .Site.Sections "Current" .FirstSection "Target" . "Color" "#FFFFFF" "Indent" 0) -}}
+  </ul>
 </div>
